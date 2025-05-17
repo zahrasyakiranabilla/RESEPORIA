@@ -1,0 +1,85 @@
+body {
+    margin: 0;
+    font-family: sans-serif;
+    background-image: url('image/background.png'); 
+    background-size: cover;  
+    background-position: center;
+    background-repeat: repeat;
+}
+
+.navbar {
+    background-color: #6f8f64;
+    padding: 15px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: 'Poppins', sans-serif;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+.logo-img {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.brand-name {
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+    background-color: #f2f2f2;
+    border-radius: 30px;
+    padding: 5px 15px;
+    flex-grow: 1;
+    max-width: 600px;
+    margin: 0 20px;
+}
+
+.search-input {
+    border: none;
+    outline: none;
+    padding: 10px;
+    background: transparent;
+    flex-grow: 1;
+    font-size: 16px;
+}
+
+.search-button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 18px;
+    color: #333;
+}
+
+.nav-icons {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.nav-icons i {
+    font-size: 20px;
+    color: white;
+    cursor: pointer;
+}
+
+.login-btn {
+    background-color: white;
+    color: black;
+    padding: 8px 18px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: bold;
+}
