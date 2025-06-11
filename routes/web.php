@@ -1,6 +1,7 @@
 <?php
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RecipeController;
+use App\Http\Controllers\SaranController;
 
 Route::get('/', [RecipeController::class, 'index'])->name('home');
 Route::get('/category/{category}', [RecipeController::class, 'category'])->name('recipes.category');
@@ -12,6 +13,10 @@ Route::get('/api/search', [RecipeController::class, 'searchApi'])->name('recipes
 // AJAX routes
 Route::post('/recipe/{recipe}/like', [RecipeController::class, 'like'])->name('recipes.like');
 Route::post('/recipe/{recipe}/favorite', [RecipeController::class, 'toggleFavorite'])->name('recipes.favorite');
+
+// Saran routes
+Route::get('/saran', [SaranController::class, 'create'])->name('saran.create');
+Route::post('/saran', [SaranController::class, 'store'])->name('saran.store');
 
 require __DIR__.'/auth.php';
 

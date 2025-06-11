@@ -5,12 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $title ?? 'Reseporia' }}</title>
-    
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" type="image/png" href="{{ asset('images/logoreseporia.png') }}" />
-    
+
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -20,7 +20,7 @@
             background-repeat: no-repeat;
             background-attachment: fixed;
         }
-        
+
         /* Ensure full width green section */
         .full-width-green {
             margin-left: calc(-50vw + 50%);
@@ -37,7 +37,7 @@
                 <!-- Logo Section -->
                 <div class="flex items-center space-x-3">
                     <a href="{{ route('home') }}" class="flex items-center space-x-3 hover:opacity-80 transition-opacity">
-                        <img src="{{ asset('images/logoreseporia.png') }}" alt="Logo" class="w-12 h-12 rounded-full"> 
+                        <img src="{{ asset('images/logoreseporia.png') }}" alt="Logo" class="w-12 h-12 rounded-full">
                         <span class="text-2xl font-bold">Reseporia</span>
                     </a>
                 </div>
@@ -45,28 +45,28 @@
                 <!-- Search Section -->
                 <div class="flex-1 max-w-lg mx-8 relative">
                     <form action="{{ route('recipes.search') }}" method="GET" class="flex w-full bg-white rounded-full overflow-hidden shadow-sm focus-within:ring-2 focus-within:ring-[#9bbd84]">
-                        <input 
-                            type="text" 
-                            name="q" 
+                        <input
+                            type="text"
+                            name="q"
                             id="searchInput"
-                            placeholder="Cari resep..." 
+                            placeholder="Cari resep..."
                             class="flex-grow py-2 px-4 text-gray-700 border-none outline-none bg-transparent"
                             value="{{ request('q') }}"
                             autocomplete="off"
                         >
-                        <button 
-                            type="submit" 
+                        <button
+                            type="submit"
                             class="bg-[#73946B] hover:bg-[#5f7e59] text-white px-4 flex items-center justify-center"
                         >
                             <i class="fas fa-search text-sm"></i>
                         </button>
-                        
+
                         <!-- Loading Spinner -->
                         <div id="searchLoading" class="absolute right-14 top-1/2 transform -translate-y-1/2 hidden">
                             <i class="fas fa-spinner fa-spin text-gray-400"></i>
                         </div>
                     </form>
-                    
+
                     <!-- AJAX Search Results Dropdown -->
                     <div id="searchResults" class="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-lg shadow-xl mt-1 max-h-96 overflow-y-auto z-50 hidden">
                         <!-- Results will be inserted here -->
@@ -94,7 +94,7 @@
         <footer class="bg-[#73946B] text-white py-12 mt-20">
             <div class="max-w-7xl mx-auto px-4">
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                    
+
                     <!-- Logo & Description Section -->
                     <div class="md:col-span-2">
                         <div class="flex items-center space-x-3 mb-6">
@@ -102,10 +102,10 @@
                             <h3 class="text-3xl font-bold">Reseporia</h3>
                         </div>
                         <p class="text-green-100 leading-relaxed mb-6 max-w-md">
-                            Platform resep masakan terbaik Indonesia. Temukan ribuan resep lezat dari berbagai daerah, 
+                            Platform resep masakan terbaik Indonesia. Temukan ribuan resep lezat dari berbagai daerah,
                             mulai dari makanan tradisional hingga kreasi modern yang menggugah selera.
                         </p>
-                        
+
                         <!-- Social Media Icons -->
                         <div class="flex items-center space-x-4">
                             <a href="#" class="w-10 h-10 bg-black rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors">
@@ -142,13 +142,13 @@
                         <h4 class="text-xl font-bold mb-6">Pengaduan</h4>
                         <ul class="space-y-3">
                             <li>
-                                <a href="#" class="text-green-100 hover:text-white transition-colors flex items-center">
+                                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=reseporia@gmail.com" class="text-green-100 hover:text-white transition-colors flex items-center">
                                     <i class="fas fa-envelope mr-2"></i>
                                     Lapor Konten
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="text-green-100 hover:text-white transition-colors flex items-center">
+                                <a href="{{ route('saran.create') }}" class="text-green-100 hover:text-white transition-colors flex items-center">
                                     <i class="fas fa-flag mr-2"></i>
                                     Saran & Masukan
                                 </a>
@@ -179,7 +179,7 @@
                             © 2024 Reseporia. Semua hak cipta dilindungi.
                         </p>
                     </div>
-                    
+
                     <div class="flex flex-wrap gap-6 text-sm">
                         <a href="#" class="text-green-100 hover:text-white transition-colors">Syarat & Ketentuan</a>
                         <a href="#" class="text-green-100 hover:text-white transition-colors">Kebijakan Privasi</a>
@@ -190,7 +190,7 @@
             </div>
         </footer>
     <script src="{{ asset('js/reseporia.js') }}"></script>
-    
+
     <!-- AJAX Search Script -->
     <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -202,7 +202,7 @@
         // Search function
         function performSearch() {
             const query = searchInput.value.trim();
-            
+
             if (query.length < 2) {
                 searchResults.innerHTML = '';
                 searchResults.classList.add('hidden');
@@ -212,7 +212,7 @@
             clearTimeout(searchTimeout);
             searchTimeout = setTimeout(function() {
                 searchLoading.classList.remove('hidden');
-                
+
                 fetch(`/api/search?q=${encodeURIComponent(query)}`)
                     .then(response => response.json())
                     .then(data => {
@@ -245,7 +245,7 @@
                     <div class="p-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0" onclick="goToRecipe(${recipe.id})">
                         <div class="flex items-center space-x-3">
                             <div class="w-12 h-12 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0">
-                                ${recipe.image 
+                                ${recipe.image
                                     ? `<img src="/images/recipes/${recipe.image}" alt="${recipe.title}" class="w-full h-full object-cover">`
                                     : '<i class="fas fa-utensils text-gray-400 w-full h-full flex items-center justify-center"></i>'
                                 }
@@ -265,7 +265,7 @@
                         </div>
                     </div>
                 `).join('');
-                
+
                 // Add "See all results" footer
                 const footerHtml = `
                     <div class="p-3 bg-gray-50 text-center border-t">
@@ -274,10 +274,10 @@
                         </button>
                     </div>
                 `;
-                
+
                 searchResults.innerHTML = resultsHtml + footerHtml;
             }
-            
+
             searchResults.classList.remove('hidden');
         }
 
