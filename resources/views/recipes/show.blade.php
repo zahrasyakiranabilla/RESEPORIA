@@ -70,9 +70,28 @@
             <div class="bg-white rounded-2xl px-6 py-8 shadow-lg">
                 <h2 class="text-xl font-bold text-gray-800 mb-6 text-center">Video</h2>
                 @if($recipe->video_url)
-                    <div class="w-full h-64 bg-gray-100 rounded-xl overflow-hidden">
-                        <iframe src="{{ $recipe->video_url }}" frameborder="0" allowfullscreen class="w-full h-full"></iframe>
-                    </div>
+                    @php
+                        $videoId = null;
+                        if (Str::contains($recipe->video_url, 'youtube.com/watch?v=')) {
+                            $videoId = Str::after($recipe->video_url, 'v=');
+                        } elseif (Str::contains($recipe->video_url, 'youtu.be/')) {
+                            $videoId = Str::after($recipe->video_url, 'youtu.be/');
+                        }
+                    @endphp
+
+                    @if($videoId)
+                        <div class="w-full h-64 bg-gray-100 rounded-xl overflow-hidden">
+                            <iframe src="https://www.youtube.com/embed/{{ $videoId }}" frameborder="0" allowfullscreen class="w-full h-full">
+                            </iframe>
+                        </div>
+                    @else
+                        <div class="w-full h-64 bg-gray-100 rounded-xl flex items-center justify-center">
+                            <div class="text-center text-gray-400">
+                                <i class="fas fa-play-circle text-6xl mb-4"></i>
+                                <p class="text-lg">Format URL video tidak dikenali</p>
+                            </div>
+                        </div>
+                    @endif
                 @else
                     <div class="w-full h-64 bg-gray-100 rounded-xl flex items-center justify-center">
                         <div class="text-center text-gray-400">
@@ -88,18 +107,18 @@
         <div class="mx-6 mb-6">
             <div class="bg-[#9EBC8A] rounded-2xl px-6 py-8">
                 <h2 class="text-xl font-bold text-gray-800 mb-6 text-center">Ulasan</h2>
-                
+
                 <!-- Comment Form -->
                 <div class="bg-white rounded-xl p-4 mb-4">
                     <form action="#" method="POST" class="space-y-4">
                         @csrf
                         <div>
                             <label for="comment" class="block text-sm font-medium text-gray-700 mb-2">Tulis ulasan Anda:</label>
-                            <textarea 
-                                id="comment" 
-                                name="comment" 
-                                rows="4" 
-                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none" 
+                            <textarea
+                                id="comment"
+                                name="comment"
+                                rows="4"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
                                 placeholder="Bagikan pengalaman Anda tentang resep ini..."
                                 required></textarea>
                         </div>
@@ -133,7 +152,7 @@
                         </div>
                         <p class="text-gray-700 text-sm">Resep yang sangat mudah diikuti dan hasilnya lezat! Keluarga sangat suka.</p>
                     </div>
-                    
+
                     <div class="bg-white rounded-xl p-4">
                         <div class="flex items-center justify-between mb-2">
                             <span class="font-medium text-gray-800">Anonim</span>
@@ -159,23 +178,23 @@
     <script>
     function toggleFavorite(recipeId) {
         console.log('Button clicked, recipeId:', recipeId);
-        
+
         const btn = event.currentTarget;
         const originalContent = btn.innerHTML;
-        
+
         // Check CSRF token
         const csrfToken = document.querySelector('meta[name="csrf-token"]');
         console.log('CSRF token found:', csrfToken ? 'Yes' : 'No');
-        
+
         if (!csrfToken) {
             alert('CSRF token tidak ditemukan!');
             return;
         }
-        
+
         // Add loading state
         btn.innerHTML = '<i class="fas fa-spinner fa-spin text-xl"></i>';
         btn.disabled = true;
-        
+
         fetch(`/recipe/${recipeId}/favorite`, {
             method: 'POST',
             headers: {
@@ -187,19 +206,19 @@
         .then(response => {
             console.log('Response status:', response.status);
             console.log('Response ok:', response.ok);
-            
+
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            
+
             return response.json();
         })
         .then(data => {
             console.log('Success data:', data);
-            
+
             // Always show bookmark icon
             btn.innerHTML = '<i class="fas fa-bookmark text-xl"></i>';
-            
+
             if (data.favorited) {
                 // Added to favorites - yellow/golden color
                 btn.classList.remove('bg-blue-500', 'hover:bg-blue-600');
@@ -211,7 +230,7 @@
                 btn.classList.add('bg-blue-500', 'hover:bg-blue-600');
                 showToast('Dihapus dari favorit');
             }
-            
+
             btn.disabled = false;
         })
         .catch(error => {
@@ -226,17 +245,17 @@
     function showToast(message, type = 'success') {
         const toast = document.createElement('div');
         const bgColor = type === 'error' ? 'bg-red-500' : 'bg-green-500';
-        
+
         toast.className = `fixed top-4 right-4 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg z-50 transform translate-x-full transition-transform duration-300`;
         toast.textContent = message;
-        
+
         document.body.appendChild(toast);
-        
+
         // Show toast
         setTimeout(() => {
             toast.classList.remove('translate-x-full');
         }, 100);
-        
+
         // Hide toast after 3 seconds
         setTimeout(() => {
             toast.classList.add('translate-x-full');
