@@ -29,6 +29,7 @@
         }
     </style>
 </head>
+@if (!request()->is('login') && !request()->is('register') && !request()->is('reset-password'))
 <body class="min-h-screen">
     <!-- Navbar -->
     <header class="text-white relative z-50" style="background-color: #73946B;">
@@ -78,19 +79,21 @@
                     <a href="{{ route('recipes.favorites') }}" class="text-white hover:text-green-200 transition-colors p-2">
                         <i class="fas fa-heart text-xl"></i>
                     </a>
-                    <button class="bg-white text-green-700 px-6 py-2 rounded-full font-semibold hover:bg-green-50 transition-colors">
+                    <a href="{{ route('login') }}" data-turbo="false" class="bg-white text-green-700 px-6 py-2 rounded-full font-semibold hover:bg-green-50 transition-colors">
                         Login/Register
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>
     </header>
+    @endif
 
     <!-- Main Content -->
     <main class="min-h-screen">
         {{ $slot }}
     </main>
         <!-- Footer -->
+        @if (!request()->is('login') && !request()->is('register'))
         <footer class="bg-[#73946B] text-white py-12 mt-20">
             <div class="max-w-7xl mx-auto px-4">
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -190,6 +193,7 @@
             </div>
         </footer>
     <script src="{{ asset('js/reseporia.js') }}"></script>
+    @endif
 
     <!-- AJAX Search Script -->
     <script>
