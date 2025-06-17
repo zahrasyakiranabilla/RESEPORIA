@@ -1,127 +1,84 @@
-<?php
+<div class="min-h-screen flex items-center justify-center bg-[#e6e2c7] px-4 py-12 relative">
+    <a href="{{ route('home') }}"
+       class="absolute top-8 left-8 text-white bg-black/20 rounded-full p-3 hover:bg-black/40 transition-colors duration-300"
+       aria-label="Kembali ke halaman utama">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+    </a>
 
-use Illuminate\Auth\Events\Lockout;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\RateLimiter;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Str;
-use Illuminate\Validation\ValidationException;
-use Livewire\Attributes\Layout;
-use Livewire\Attributes\Validate;
-use Livewire\Volt\Component;
 
-new #[Layout('components.layouts.auth')] class extends Component {
-    #[Validate('required|string|email')]
-    public string $email = '';
 
-    #[Validate('required|string')]
-    public string $password = '';
-
-    public bool $remember = false;
-
-    /**
-     * Handle an incoming authentication request.
-     */
-    public function login(): void
-    {
-        $this->validate();
-
-        $this->ensureIsNotRateLimited();
-
-        if (! Auth::attempt(['email' => $this->email, 'password' => $this->password], $this->remember)) {
-            RateLimiter::hit($this->throttleKey());
-
-            throw ValidationException::withMessages([
-                'email' => __('auth.failed'),
-            ]);
-        }
-
-        RateLimiter::clear($this->throttleKey());
-        Session::regenerate();
-
-        $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
-    }
-
-    /**
-     * Ensure the authentication request is not rate limited.
-     */
-    protected function ensureIsNotRateLimited(): void
-    {
-        if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
-            return;
-        }
-
-        event(new Lockout(request()));
-
-        $seconds = RateLimiter::availableIn($this->throttleKey());
-
-        throw ValidationException::withMessages([
-            'email' => __('auth.throttle', [
-                'seconds' => $seconds,
-                'minutes' => ceil($seconds / 60),
-            ]),
-        ]);
-    }
-
-    /**
-     * Get the authentication rate limiting throttle key.
-     */
-    protected function throttleKey(): string
-    {
-        return Str::transliterate(Str::lower($this->email).'|'.request()->ip());
-    }
-}; ?>
-
-<div class="flex flex-col gap-6">
-    <x-auth-header :title="__('Log in to your account')" :description="__('Enter your email and password below to log in')" />
-
-    <!-- Session Status -->
-    <x-auth-session-status class="text-center" :status="session('status')" />
-
-    <form wire:submit="login" class="flex flex-col gap-6">
-        <!-- Email Address -->
-        <flux:input
-            wire:model="email"
-            :label="__('Email address')"
-            type="email"
-            required
-            autofocus
-            autocomplete="email"
-            placeholder="email@example.com"
-        />
-
-        <!-- Password -->
-        <div class="relative">
-            <flux:input
-                wire:model="password"
-                :label="__('Password')"
-                type="password"
-                required
-                autocomplete="current-password"
-                :placeholder="__('Password')"
-                viewable
-            />
-
-            @if (Route::has('password.request'))
-                <flux:link class="absolute end-0 top-0 text-sm" :href="route('password.request')" wire:navigate>
-                    {{ __('Forgot your password?') }}
-                </flux:link>
-            @endif
+    <div class="bg-[#73946B] rounded-3xl shadow-xl w-full max-w-md px-10 py-12">
+        <div class="text-center mb-10">
+            <img src="{{ asset('images/logoreseporia.png') }}" class="mx-auto h-20 w-20 rounded-full" alt="Logo">
+            <h2 class="text-white text-3xl font-bold mt-4">Log In</h2>
         </div>
 
-        <!-- Remember Me -->
-        <flux:checkbox wire:model="remember" :label="__('Remember me')" />
+        <form method="POST" action="{{ route('login') }}" class="space-y-8">
+            @csrf
 
-        <div class="flex items-center justify-end">
-            <flux:button variant="primary" type="submit" class="w-full">{{ __('Log in') }}</flux:button>
-        </div>
-    </form>
+            {{-- Email --}}
+            <div class="relative">
+                <input
+                    type="email"
+                    name="email"
+                    id="email"
+                    required
+                    class="peer w-full px-4 pt-5 pb-2 bg-transparent border border-white text-white rounded-md placeholder-transparent focus:outline-none focus:ring-2 focus:ring-white focus:border-white"
+                    placeholder="Email"
+                />
+                <label
+                    for="email"
+                    class="absolute left-3 -top-2.5 bg-[#73946B] px-1 text-sm text-white transition-all peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-white/70 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-white"
+                >
+                    Email
+                </label>
+            </div>
 
-    @if (Route::has('register'))
-        <div class="space-x-1 rtl:space-x-reverse text-center text-sm text-zinc-600 dark:text-zinc-400">
-            {{ __('Don\'t have an account?') }}
-            <flux:link :href="route('register')" wire:navigate>{{ __('Sign up') }}</flux:link>
-        </div>
-    @endif
+            {{-- Password --}}
+            <div class="relative">
+                <input
+                    type="password"
+                    name="password"
+                    id="password"
+                    required
+                    class="peer w-full px-4 pt-5 pb-2 bg-transparent border border-white text-white rounded-md placeholder-transparent focus:outline-none focus:ring-2 focus:ring-white focus:border-white"
+                    placeholder="Password"
+                />
+                <label
+                    for="password"
+                    class="absolute left-3 -top-2.5 bg-[#73946B] px-1 text-sm text-white transition-all peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-white/70 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-white"
+                >
+                    Password
+                </label>
+            </div>
+
+            {{-- Remember & Forgot --}}
+            <div class="flex items-center justify-between text-white/90 text-sm">
+                <label class="flex items-center gap-2">
+                    <input type="checkbox" name="remember" class="accent-white">
+                    Remember Me
+                </label>
+                @if (Route::has('password.request'))
+                    <a class="hover:underline text-yellow-200 font-medium" href="{{ route('password.request') }}">
+                        Forgot Password?
+                    </a>
+                @endif
+            </div>
+
+            {{-- Tombol --}}
+            <button
+                type="submit"
+                class="w-full bg-white text-[#2f3e2a] font-semibold py-3 rounded-full hover:bg-gray-200 transition duration-300">
+                Log In
+            </button>
+
+            {{-- Register --}}
+            <p class="text-center text-sm text-white/80 mt-4">
+                Don't have an account?
+                <a href="{{ route('register') }}" class="text-yellow-200 font-medium hover:underline">Sign up here!</a>
+            </p>
+        </form>
+    </div>
 </div>
