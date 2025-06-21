@@ -34,12 +34,21 @@
             <div class="bg-white rounded-2xl px-6 py-8 shadow-lg">
                 <h2 class="text-xl font-bold text-gray-800 mb-6 text-center">Bahan-Bahan</h2>
                 <div class="space-y-3">
-                    @foreach(explode(';', $recipe->ingredients) as $ingredient)
-                        <div class="flex items-center space-x-3">
-                            <div class="w-2 h-2 bg-green-500 rounded-full"></div>
-                            <span class="text-gray-700">{{ trim($ingredient) }}</span>
-                        </div>
-                    @endforeach
+                    @if(is_array($recipe->ingredients))
+                        @foreach($recipe->ingredients as $ingredient)
+                            <div class="flex items-center space-x-3">
+                                <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                                <span class="text-gray-700">{{ trim($ingredient) }}</span>
+                            </div>
+                        @endforeach
+                    @else
+                        @foreach(explode(';', $recipe->ingredients) as $ingredient)
+                            <div class="flex items-center space-x-3">
+                                <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                                <span class="text-gray-700">{{ trim($ingredient) }}</span>
+                            </div>
+                        @endforeach
+                    @endif
                 </div>
             </div>
         </div>
@@ -106,11 +115,34 @@
         <!-- Comments Section -->
         <div class="mx-6 mb-6">
             <div class="bg-[#9EBC8A] rounded-2xl px-6 py-8">
-                <h2 class="text-xl font-bold text-gray-800 mb-6 text-center">Ulasan</h2>
+                <h2 class="text-xl font-bold text-gray-800 mb-6 text-center">
+                    Ulasan ({{ $recipe->totalComments() }})
+                    @if($recipe->averageRating() > 0)
+                        - Rating: {{ number_format($recipe->averageRating(), 1) }}/5 ⭐
+                    @endif
+                </h2>
+
+                <!-- Success Message -->
+                @if(session('success'))
+                    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
+                <!-- Validation Errors -->
+                @if($errors->any())
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                        <ul class="list-disc list-inside">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
 
                 <!-- Comment Form -->
                 <div class="bg-white rounded-xl p-4 mb-4">
-                    <form action="#" method="POST" class="space-y-4">
+                    <form action="{{ route('comments.store', $recipe) }}" method="POST" class="space-y-4">
                         @csrf
                         <div>
                             <label for="comment" class="block text-sm font-medium text-gray-700 mb-2">Tulis ulasan Anda:</label>
@@ -120,17 +152,17 @@
                                 rows="4"
                                 class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
                                 placeholder="Bagikan pengalaman Anda tentang resep ini..."
-                                required></textarea>
+                                required>{{ old('comment') }}</textarea>
                         </div>
                         <div class="flex justify-between items-center">
                             <div class="flex items-center space-x-2">
                                 <label for="rating" class="text-sm font-medium text-gray-700">Rating:</label>
                                 <select id="rating" name="rating" class="border border-gray-300 rounded px-3 py-1 text-sm focus:ring-2 focus:ring-green-500">
-                                    <option value="5">⭐⭐⭐⭐⭐</option>
-                                    <option value="4">⭐⭐⭐⭐</option>
-                                    <option value="3">⭐⭐⭐</option>
-                                    <option value="2">⭐⭐</option>
-                                    <option value="1">⭐</option>
+                                    <option value="5" {{ old('rating') == '5' ? 'selected' : '' }}>⭐⭐⭐⭐⭐</option>
+                                    <option value="4" {{ old('rating') == '4' ? 'selected' : '' }}>⭐⭐⭐⭐</option>
+                                    <option value="3" {{ old('rating') == '3' ? 'selected' : '' }}>⭐⭐⭐</option>
+                                    <option value="2" {{ old('rating') == '2' ? 'selected' : '' }}>⭐⭐</option>
+                                    <option value="1" {{ old('rating') == '1' ? 'selected' : '' }}>⭐</option>
                                 </select>
                             </div>
                             <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
@@ -140,29 +172,39 @@
                     </form>
                 </div>
 
-                <!-- Existing Comments (placeholder) -->
+                <!-- Existing Comments -->
                 <div class="space-y-3">
-                    <div class="bg-white rounded-xl p-4">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="font-medium text-gray-800">Anonim</span>
-                            <div class="flex items-center space-x-1">
-                                <span class="text-yellow-500">⭐⭐⭐⭐⭐</span>
-                                <span class="text-sm text-gray-500">2 hari lalu</span>
+                    @forelse($comments as $comment)
+                        <div class="bg-white rounded-xl p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="font-medium text-gray-800">{{ $comment->user_name }}</span>
+                                <div class="flex items-center space-x-1">
+                                    <span class="text-yellow-500">
+                                        @for($i = 1; $i <= 5; $i++)
+                                            @if($i <= $comment->rating)
+                                                ⭐
+                                            @endif
+                                        @endfor
+                                    </span>
+                                    <span class="text-sm text-gray-500">{{ $comment->created_at->diffForHumans() }}</span>
+                                </div>
                             </div>
+                            <p class="text-gray-700 text-sm">{{ $comment->comment }}</p>
                         </div>
-                        <p class="text-gray-700 text-sm">Resep yang sangat mudah diikuti dan hasilnya lezat! Keluarga sangat suka.</p>
-                    </div>
+                    @empty
+                        <div class="bg-white rounded-xl p-4 text-center text-gray-500">
+                            Belum ada ulasan. Jadilah yang pertama memberikan ulasan!
+                        </div>
+                    @endforelse
 
-                    <div class="bg-white rounded-xl p-4">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="font-medium text-gray-800">Anonim</span>
-                            <div class="flex items-center space-x-1">
-                                <span class="text-yellow-500">⭐⭐⭐⭐</span>
-                                <span class="text-sm text-gray-500">1 minggu lalu</span>
+                    <!-- Pagination -->
+                    @if($comments->hasPages())
+                        <div class="mt-4 flex justify-center">
+                            <div class="bg-white rounded-lg px-4 py-2">
+                                {{ $comments->links() }}
                             </div>
                         </div>
-                        <p class="text-gray-700 text-sm">Enak banget! Cuma agak asin menurut saya, next time kurangin garamnya dikit.</p>
-                    </div>
+                    @endif
                 </div>
             </div>
         </div>

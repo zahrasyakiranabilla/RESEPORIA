@@ -3,9 +3,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RecipeController;
 use App\Http\Controllers\SaranController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\CommentController;
 
 Route::get('/', [RecipeController::class, 'index'])->name('home');
-Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
 Route::get('/category/{category}', [RecipeController::class, 'category'])->name('recipes.category');
 Route::get('/recipe/{recipe}', [RecipeController::class, 'show'])->name('recipes.show');
 Route::get('/favorites', [RecipeController::class, 'favorites'])->name('recipes.favorites');
@@ -13,7 +13,7 @@ Route::get('/search', [RecipeController::class, 'search'])->name('recipes.search
 Route::get('/api/search', [RecipeController::class, 'searchApi'])->name('recipes.search.api');
 Route::get('/register', [RegisterController::class, 'show'])->name('register');
 Route::post('/register', [RegisterController::class, 'register'])->name('register.submit');
-
+Route::post('/recipe/{recipe}/comment', [CommentController::class, 'store'])->name('comments.store');
 
 // AJAX routes
 Route::post('/recipe/{recipe}/like', [RecipeController::class, 'like'])->name('recipes.like');
@@ -30,7 +30,10 @@ Route::get('/force-logout', function () {
     return redirect('/login');
 });
 
-require __DIR__.'/auth.php';
+// Check if auth.php exists before requiring it
+if (file_exists(__DIR__.'/auth.php')) {
+    require __DIR__.'/auth.php';
+}
 
 // Protected routes that require authentication
 Route::middleware(['auth'])->group(function () {

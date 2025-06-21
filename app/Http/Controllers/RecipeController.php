@@ -23,51 +23,57 @@ class RecipeController extends Controller
     }
 
     public function category($category)
-{
-    $categoryMap = [
-        'appetizer' => 'Appetizer',
-        'main-course' => 'Main Course', 
-        'dessert' => 'Dessert',
-        'drinks' => 'Drinks'
-    ];
+    {
+        $categoryMap = [
+            'appetizer' => 'Appetizer',
+            'main-course' => 'Main Course', 
+            'dessert' => 'Dessert',
+            'drinks' => 'Drinks'
+        ];
 
-    if (!isset($categoryMap[$category])) {
-        abort(404);
-    }
+        if (!isset($categoryMap[$category])) {
+            abort(404);
+        }
 
-    $categoryName = $categoryMap[$category];
-    
-    // Get sort parameter
-    $sort = request('sort', 'newest');
-    
-    $query = Recipe::where('category', $categoryName);
-    
-    // Apply sorting
-    switch ($sort) {
-        case 'rating':
-            $query->orderBy('rating', 'desc');
-            break;
-        case 'likes':
-            $query->orderBy('likes', 'desc');
-            break;
-        case 'time':
-            $query->orderBy('cooking_time', 'asc');
-            break;
-        default:
-            $query->orderBy('created_at', 'desc');
+        $categoryName = $categoryMap[$category];
+        
+        // Get sort parameter
+        $sort = request('sort', 'newest');
+        
+        $query = Recipe::where('category', $categoryName);
+        
+        // Apply sorting - update untuk menggunakan rating dari comments
+        switch ($sort) {
+            case 'rating':
+                // Sort berdasarkan average rating dari comments
+                $query->withCount(['comments as avg_rating' => function($q) {
+                    $q->select(\DB::raw('coalesce(avg(rating), 0)'));
+                }])->orderBy('avg_rating', 'desc');
+                break;
+            case 'likes':
+                $query->orderBy('likes', 'desc');
+                break;
+            case 'time':
+                $query->orderBy('cooking_time', 'asc');
+                break;
+            default:
+                $query->orderBy('created_at', 'desc');
+        }
+        
+        $recipes = $query->get();
+        
+        return view('recipes.category', compact('recipes', 'categoryName'));
     }
-    
-    $recipes = $query->get();
-    
-    return view('recipes.category', compact('recipes', 'categoryName'));
-}
 
     public function show(Recipe $recipe)
     {
         $sessionId = session()->getId();
         $isFavorited = $recipe->isFavoritedBy($sessionId);
         
-        return view('recipes.show', compact('recipe', 'isFavorited'));
+        // Load comments dengan pagination
+        $comments = $recipe->comments()->paginate(10);
+        
+        return view('recipes.show', compact('recipe', 'isFavorited', 'comments'));
     }
 
     public function like(Recipe $recipe)
@@ -111,22 +117,22 @@ class RecipeController extends Controller
     }
 
     public function search(Request $request)
-{
-    $query = $request->get('q');
-    
-    if (empty($query)) {
-        return redirect()->route('home');
+    {
+        $query = $request->get('q');
+        
+        if (empty($query)) {
+            return redirect()->route('home');
+        }
+        
+        $recipes = Recipe::where(function($q) use ($query) {
+            $q->where('title', 'LIKE', "%{$query}%")
+              ->orWhere('description', 'LIKE', "%{$query}%")
+              ->orWhere('ingredients', 'LIKE', "%{$query}%")
+              ->orWhere('instructions', 'LIKE', "%{$query}%");
+        })->get();
+        
+        return view('recipes.search', compact('recipes', 'query'));
     }
-    
-    $recipes = Recipe::where(function($q) use ($query) {
-        $q->where('title', 'LIKE', "%{$query}%")
-          ->orWhere('description', 'LIKE', "%{$query}%")
-          ->orWhere('ingredients', 'LIKE', "%{$query}%")
-          ->orWhere('instructions', 'LIKE', "%{$query}%");
-    })->get();
-    
-    return view('recipes.search', compact('recipes', 'query'));
-}
 
     public function searchApi(Request $request)
     {
