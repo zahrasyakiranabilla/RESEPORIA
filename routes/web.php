@@ -1,9 +1,13 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RecipeController;
 use App\Http\Controllers\SaranController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\Auth\WelcomingController;
+use App\Http\Controllers\ProfileController; // Tambahkan ini untuk nanti
+
 
 Route::get('/', [RecipeController::class, 'index'])->name('home');
 Route::get('/category/{category}', [RecipeController::class, 'category'])->name('recipes.category');
@@ -11,8 +15,6 @@ Route::get('/recipe/{recipe}', [RecipeController::class, 'show'])->name('recipes
 Route::get('/favorites', [RecipeController::class, 'favorites'])->name('recipes.favorites');
 Route::get('/search', [RecipeController::class, 'search'])->name('recipes.search');
 Route::get('/api/search', [RecipeController::class, 'searchApi'])->name('recipes.search.api');
-Route::get('/register', [RegisterController::class, 'show'])->name('register');
-Route::post('/register', [RegisterController::class, 'register'])->name('register.submit');
 Route::post('/recipe/{recipe}/comment', [CommentController::class, 'store'])->name('comments.store');
 
 // AJAX routes
@@ -23,25 +25,25 @@ Route::post('/recipe/{recipe}/favorite', [RecipeController::class, 'toggleFavori
 Route::get('/saran', [SaranController::class, 'create'])->name('saran.create');
 Route::post('/saran', [SaranController::class, 'store'])->name('saran.store');
 
-Route::get('/force-logout', function () {
-    \Illuminate\Support\Facades\Auth::logout();
-    request()->session()->invalidate();
-    request()->session()->regenerateToken();
-    return redirect('/login');
-});
 
-// Check if auth.php exists before requiring it
-if (file_exists(__DIR__.'/auth.php')) {
-    require __DIR__.'/auth.php';
-}
+// Rute Registrasi
+Route::get('/register', [RegisterController::class, 'show'])->middleware('guest')->name('register');
+Route::post('/register', [RegisterController::class, 'register'])->middleware('guest');
 
-// Protected routes that require authentication
+// Memuat rute-rute bawaan Laravel Breeze
+require __DIR__.'/auth.php';
+
+
+// Rute yang memerlukan autentikasi
 Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    // Halaman tujuan setelah login
+    Route::get('/welcoming', [WelcomingController::class, 'index'])->name('welcoming');
 
-    // Simple responses untuk settings routes (tanpa view files)
+    // Rute untuk fitur profil Anda nanti
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+
+    // Simple responses untuk settings routes (jika masih diperlukan)
     Route::get('/settings/profile', function () {
         return response('Profile Settings Page', 200);
     })->name('settings.profile');
