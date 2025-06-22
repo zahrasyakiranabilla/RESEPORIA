@@ -18,7 +18,7 @@
                 <h2 class="text-white text-3xl font-bold mt-4">Create Account</h2>
             </div>
 
-            <form method="POST" action="{{ route('register.submit') }}">
+            <form method="POST" action="{{ route('register') }}">
 
                 @csrf
                         @if ($errors->any())
