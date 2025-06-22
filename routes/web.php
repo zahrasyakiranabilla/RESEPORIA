@@ -6,7 +6,7 @@ use App\Http\Controllers\SaranController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\Auth\WelcomingController;
-use App\Http\Controllers\ProfileController; // Tambahkan ini untuk nanti
+
 
 
 Route::get('/', [RecipeController::class, 'index'])->name('home');
@@ -40,13 +40,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/welcoming', [WelcomingController::class, 'index'])->name('welcoming');
 
     // Rute untuk fitur profil Anda nanti
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+   // Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+   // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
     // Simple responses untuk settings routes (jika masih diperlukan)
-    Route::get('/settings/profile', function () {
-        return response('Profile Settings Page', 200);
-    })->name('settings.profile');
+   // Route::get('/settings/profile', function () {
+    //    return response('Profile Settings Page', 200);
+  //  })->name('settings.profile');
 
     Route::get('/settings/password', function () {
         return response('Password Settings Page', 200);
