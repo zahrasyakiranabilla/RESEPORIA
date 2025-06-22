@@ -160,13 +160,6 @@
                         <a href="{{ route('recipes.show', $recipe) }}" class="group block">
                             <div class="bg-white rounded-xl sm:rounded-2xl overflow-hidden shadow-lg sm:shadow-xl group-hover:shadow-2xl group-hover:-translate-y-1 sm:group-hover:-translate-y-2 transition-all duration-300">
                                 <div class="overflow-hidden">
-                                    @if($recipe->image)
-                                        <img src="{{ asset('images/recipes/' . $recipe->image) }}" alt="{{ $recipe->title }}" class="w-full h-36 sm:h-48 object-cover group-hover:scale-105 transition-transform duration-300">
-                                    @else
-                                        <div class="w-full h-36 sm:h-48 bg-gray-200 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
-                                            <i class="fas fa-utensils text-gray-400 text-2xl"></i>
-                                        </div>
-                                    @endif
                                     <img src="{{ asset($recipe->image) }}" alt="{{ $recipe->title }}"
                                         class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
                                 </div>
