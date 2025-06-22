@@ -14,7 +14,7 @@
         <div class="px-6 py-6 flex justify-center">
             <div class="w-96 h-64 bg-white rounded-2xl shadow-lg overflow-hidden flex items-center justify-center">
                 @if($recipe->image)
-                    <img src="{{ asset('images/recipes/' . $recipe->image) }}" alt="{{ $recipe->title }}" class="w-full h-full object-cover">
+                    <img src="{{ asset($recipe->image) }}" alt="{{ $recipe->title }}" class="w-full h-full object-cover">
                 @else
                     <div class="text-gray-400 text-lg">gambar</div>
                 @endif
@@ -34,11 +34,13 @@
             <div class="bg-white rounded-2xl px-6 py-8 shadow-lg">
                 <h2 class="text-xl font-bold text-gray-800 mb-6 text-center">Bahan-Bahan</h2>
                 <div class="space-y-3">
-                    @foreach(explode(';', $recipe->ingredients) as $ingredient)
-                        <div class="flex items-center space-x-3">
-                            <div class="w-2 h-2 bg-green-500 rounded-full"></div>
-                            <span class="text-gray-700">{{ trim($ingredient) }}</span>
-                        </div>
+                    @foreach($recipe->ingredients as $ingredient)
+                        @if(trim($ingredient))
+                            <div class="flex items-center space-x-3">
+                                <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                                <span class="text-gray-700">{{ trim($ingredient) }}</span>
+                            </div>
+                        @endif
                     @endforeach
                 </div>
             </div>
@@ -49,11 +51,12 @@
             <div class="bg-white rounded-2xl px-6 py-8 shadow-lg">
                 <h2 class="text-xl font-bold text-gray-800 mb-6 text-center">Cara membuat</h2>
                 <div class="space-y-4">
-                    @foreach(explode('.', $recipe->instructions) as $index => $instruction)
+                    @foreach($recipe->instructions as $index => $instruction)
                         @if(trim($instruction))
                             <div class="flex space-x-4">
                                 <div class="flex-shrink-0">
-                                    <div class="w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center font-bold text-sm">
+                                    <div
+                                        class="w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center font-bold text-sm">
                                         {{ $index + 1 }}
                                     </div>
                                 </div>
@@ -71,12 +74,13 @@
                 <h2 class="text-xl font-bold text-gray-800 mb-6 text-center">Video</h2>
                 @if($recipe->video_url)
                     @php
-                        $videoId = null;
-                        if (Str::contains($recipe->video_url, 'youtube.com/watch?v=')) {
-                            $videoId = Str::after($recipe->video_url, 'v=');
-                        } elseif (Str::contains($recipe->video_url, 'youtu.be/')) {
-                            $videoId = Str::after($recipe->video_url, 'youtu.be/');
-                        }
+    $videoId = null;
+    if (Str::contains($recipe->video_url, 'youtube.com/watch?v=')) {
+        $videoId = Str::after($recipe->video_url, 'v=');
+    } elseif (Str::contains($recipe->video_url, 'youtu.be/')) {
+        $videoId = Str::after($recipe->video_url, 'youtu.be/');
+    }
+
                     @endphp
 
                     @if($videoId)

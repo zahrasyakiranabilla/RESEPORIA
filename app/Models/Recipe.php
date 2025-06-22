@@ -18,11 +18,13 @@ class Recipe extends Model
         'cooking_time',
         'ingredients',
         'instructions',
-        'video_url'
+        'video_url',
+        'status',
     ];
 
     protected $casts = [
         'ingredients' => 'array',
+        'instructions' => 'array',
         'rating' => 'decimal:1'
     ];
 

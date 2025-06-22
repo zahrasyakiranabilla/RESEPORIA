@@ -67,7 +67,8 @@
                         <a href="{{ route('recipes.show', $recipe) }}" class="group block">
                             <div class="bg-white rounded-2xl overflow-hidden shadow-xl group-hover:shadow-2xl group-hover:-translate-y-2 transition-all duration-300">
                                 <div class="overflow-hidden">
-                                    <img src="{{ asset('images/recipes/' . $recipe->image) }}" alt="{{ $recipe->title }}" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
+                                    <img src="{{ asset($recipe->image) }}" alt="{{ $recipe->title }}"
+                                        class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
                                 </div>
                                 <div class="p-6">
                                     <h3 class="text-xl font-bold text-gray-800 mb-4 group-hover:text-green-700 transition-colors">
@@ -111,7 +112,7 @@
                     slide.classList.add('opacity-0');
                 }
             });
-            
+
             // Update dots
             document.querySelectorAll('.dot').forEach((dot, index) => {
                 if (index + 1 === slideNumber) {
@@ -122,7 +123,7 @@
                     dot.classList.add('bg-opacity-50');
                 }
             });
-            
+
             currentSlide = slideNumber;
         }
 
