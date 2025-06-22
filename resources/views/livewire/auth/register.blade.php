@@ -18,18 +18,8 @@
                 <h2 class="text-white text-3xl font-bold mt-4">Create Account</h2>
             </div>
 
-            <form method="POST" action="{{ route('register.submit') }}">
-
+            <form method="POST" action="{{ route('register') }}">
                 @csrf
-                        @if ($errors->any())
-            <div class="mb-4 text-sm text-red-300 bg-red-100 p-4 rounded">
-                <ul class="list-disc list-inside">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
 
                 {{-- Full Name --}}
                 <div class="relative mb-4">
