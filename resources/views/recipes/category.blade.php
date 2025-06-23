@@ -102,7 +102,7 @@
                             <!-- Recipe Image -->
                             <div class="overflow-hidden">
                                 @if($recipe->image)
-                                    <img src="{{ asset('images/recipes/' . $recipe->image) }}" alt="{{ $recipe->title }}" class="w-full h-40 sm:h-48 object-cover group-hover:scale-105 transition-transform duration-300">
+                                    <img src="{{ asset($recipe->image) }}" alt="{{ $recipe->title }}" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
                                 @else
                                     <div class="w-full h-40 sm:h-48 bg-gray-200 flex items-center justify-center">
                                         <i class="fas fa-utensils text-gray-400 text-2xl sm:text-4xl"></i>
@@ -115,7 +115,7 @@
                                 <h3 class="text-lg sm:text-xl font-bold text-gray-800 mb-3 sm:mb-4 group-hover:text-green-700 transition-colors line-clamp-2">
                                     {{ $recipe->title }}
                                 </h3>
-                                
+
                                 <!-- Recipe Description (limited) -->
                                 <p class="text-gray-600 text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-3">
                                     {{ Str::limit($recipe->description, 80) }}
@@ -149,18 +149,18 @@
                 </div>
             @else
                 <!-- Empty State -->
-                <div class="text-center py-12 sm:py-20">
-                    <div class="bg-white rounded-xl sm:rounded-2xl shadow-lg p-8 sm:p-12 max-w-md mx-auto">
-                        <i class="fas fa-search text-gray-300 text-5xl sm:text-8xl mb-4 sm:mb-6"></i>
-                        <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-3 sm:mb-4">Belum Ada Resep</h2>
-                        <p class="text-gray-600 text-sm sm:text-base mb-6 sm:mb-8">Belum ada resep dalam kategori <strong>{{ $categoryName }}</strong>. Coba kategori lain atau kembali ke beranda.</p>
-                        
+                <div class="text-center py-20">
+                    <div class="bg-white rounded-2xl shadow-lg p-12 max-w-md mx-auto">
+                        <i class="fas fa-search text-gray-300 text-8xl mb-6"></i>
+                        <h2 class="text-2xl font-bold text-gray-800 mb-4">Belum Ada Resep</h2>
+                        <p class="text-gray-600 mb-8">Belum ada resep dalam kategori <strong>{{ $categoryName }}</strong>. Coba kategori lain atau kembali ke beranda.</p>
+
                         <div class="space-y-3">
                             <a href="{{ route('home') }}" class="block bg-[#9EBC8A] hover:bg-[#8BAA79] text-white px-6 sm:px-8 py-3 rounded-lg font-medium transition-colors">
                                 <i class="fas fa-home mr-2"></i>
                                 Kembali ke Beranda
                             </a>
-                            
+
                             <!-- Quick Category Links -->
                             <div class="flex flex-wrap gap-2 justify-center">
                                 <a href="{{ route('recipes.category', 'appetizer') }}" class="text-xs sm:text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded-full transition-colors">
@@ -229,19 +229,13 @@
     // Apply sorting function
     function applySorting(sortBy) {
         const currentUrl = new URL(window.location.href);
-        
+
         if (sortBy) {
             currentUrl.searchParams.set('sort', sortBy);
         } else {
             currentUrl.searchParams.delete('sort');
         }
-        
-        // Close mobile dropdown
-        if (mobileSortDropdown) {
-            mobileSortDropdown.classList.add('hidden');
-            mobileSortIcon.style.transform = 'rotate(0deg)';
-        }
-        
+
         window.location.href = currentUrl.toString();
     }
 
