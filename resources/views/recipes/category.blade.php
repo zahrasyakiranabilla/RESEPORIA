@@ -102,7 +102,7 @@
                             <!-- Recipe Image -->
                             <div class="overflow-hidden">
                                 @if($recipe->image)
-                                    <img src="{{ asset($recipe->image) }}" alt="{{ $recipe->title }}" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
+                                    <img src="{{ asset($recipe->image) }}" alt="{{ $recipe->title }}" class="w-full h-40 sm:h-48 object-cover group-hover:scale-110 transition-transform duration-300">
                                 @else
                                     <div class="w-full h-40 sm:h-48 bg-gray-200 flex items-center justify-center">
                                         <i class="fas fa-utensils text-gray-400 text-2xl sm:text-4xl"></i>
