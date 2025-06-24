@@ -6,6 +6,8 @@ use App\Http\Controllers\SaranController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\Auth\WelcomingController;
+use App\Http\Controllers\Auth\LoginController;
+use Illuminate\Support\Facades\Auth;
 
 
 
@@ -16,6 +18,10 @@ Route::get('/favorites', [RecipeController::class, 'favorites'])->name('recipes.
 Route::get('/search', [RecipeController::class, 'search'])->name('recipes.search');
 Route::get('/api/search', [RecipeController::class, 'searchApi'])->name('recipes.search.api');
 Route::post('/recipe/{recipe}/comment', [CommentController::class, 'store'])->name('comments.store');
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [LoginController::class, 'login']);
+Route::get('/keluar', function () { Auth::logout(); return redirect('/login');
+});
 
 // AJAX routes
 Route::post('/recipe/{recipe}/like', [RecipeController::class, 'like'])->name('recipes.like');
