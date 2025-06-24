@@ -27,6 +27,10 @@ Route::get('/keluar', function () { Auth::logout(); return redirect('/login');
 Route::post('/recipe/{recipe}/like', [RecipeController::class, 'like'])->name('recipes.like');
 Route::post('/recipe/{recipe}/favorite', [RecipeController::class, 'toggleFavorite'])->name('recipes.favorite');
 
+//Upload Resep
+Route::get('/recipes/create', [RecipeController::class, 'create'])->name('recipes.create');
+Route::post('/recipes', [RecipeController::class, 'store'])->name('recipes.store');
+
 // Saran routes
 Route::get('/saran', [SaranController::class, 'create'])->name('saran.create');
 Route::post('/saran', [SaranController::class, 'store'])->name('saran.store');

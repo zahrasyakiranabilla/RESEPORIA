@@ -1,3 +1,7 @@
+@php
+use Illuminate\Support\Facades\Storage;
+@endphp
+
 <x-layouts.app>
     <div class="pt-6 sm:pt-10 px-4 sm:px-5">
         <!-- Dynamic Banner Section -->
@@ -155,18 +159,13 @@
                 </div>
 
                 <!-- Recipe Cards Section -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
                     @foreach($recipes->take(6) as $recipe)
                         <a href="{{ route('recipes.show', $recipe) }}" class="group block">
                             <div class="bg-white rounded-xl sm:rounded-2xl overflow-hidden shadow-lg sm:shadow-xl group-hover:shadow-2xl group-hover:-translate-y-1 sm:group-hover:-translate-y-2 transition-all duration-300">
                                 <div class="overflow-hidden">
-                                    @if($recipe->image)
-                                        <img src="{{ asset('images/recipes/' . $recipe->image) }}" alt="{{ $recipe->title }}" class="w-full h-36 sm:h-48 object-cover group-hover:scale-105 transition-transform duration-300">
-                                    @else
-                                        <div class="w-full h-36 sm:h-48 bg-gray-200 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
-                                            <i class="fas fa-utensils text-gray-400 text-2xl"></i>
-                                        </div>
-                                    @endif
+                                        <img src="{{ $recipe->image ? asset($recipe->image) : asset('images/default-recipe.jpg') }}"                                        alt="{{ $recipe->title }}"
+                                        class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
                                 </div>
                                 <div class="p-4 sm:p-6">
                                     <h3 class="text-lg sm:text-xl font-bold text-gray-800 mb-3 sm:mb-4 group-hover:text-green-700 transition-colors line-clamp-2">
@@ -215,7 +214,7 @@
                     slide.classList.add('opacity-0');
                 }
             });
-            
+
             // Update dots
             document.querySelectorAll('.dot').forEach((dot, index) => {
                 if (index + 1 === slideNumber) {
@@ -226,7 +225,7 @@
                     dot.classList.add('bg-opacity-50');
                 }
             });
-            
+
             currentSlide = slideNumber;
             
             setTimeout(() => {

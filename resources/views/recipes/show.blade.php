@@ -14,7 +14,7 @@
         <div class="px-4 sm:px-6 py-4 sm:py-6 flex justify-center">
             <div class="w-full max-w-sm sm:max-w-md lg:max-w-lg h-48 sm:h-64 lg:h-72 bg-white rounded-2xl shadow-lg overflow-hidden flex items-center justify-center">
                 @if($recipe->image)
-                    <img src="{{ asset('images/recipes/' . $recipe->image) }}" alt="{{ $recipe->title }}" class="w-full h-full object-cover">
+                    <img src="{{ asset($recipe->image) }}" alt="{{ $recipe->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                 @else
                     <div class="text-gray-400 text-base sm:text-lg">gambar</div>
                 @endif
@@ -34,20 +34,15 @@
             <div class="bg-white rounded-2xl px-4 sm:px-6 py-6 sm:py-8 shadow-lg">
                 <h2 class="text-lg sm:text-xl font-bold text-gray-800 mb-4 sm:mb-6 text-center">Bahan-Bahan</h2>
                 <div class="space-y-3">
-                    @if(is_array($recipe->ingredients))
+                    @if($recipe->ingredients && count($recipe->ingredients) > 0)
                         @foreach($recipe->ingredients as $ingredient)
-                            <div class="flex items-start space-x-3">
-                                <div class="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
-                                <span class="text-gray-700 text-sm sm:text-base leading-relaxed">{{ trim($ingredient) }}</span>
+                            <div class="flex items-center space-x-3">
+                                <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                                <span class="text-gray-700">{{ $ingredient }}</span>
                             </div>
                         @endforeach
                     @else
-                        @foreach(explode(';', $recipe->ingredients) as $ingredient)
-                            <div class="flex items-start space-x-3">
-                                <div class="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
-                                <span class="text-gray-700 text-sm sm:text-base leading-relaxed">{{ trim($ingredient) }}</span>
-                            </div>
-                        @endforeach
+                        <p class="text-gray-500 text-center">Bahan-bahan belum tersedia</p>
                     @endif
                 </div>
             </div>
@@ -58,18 +53,18 @@
             <div class="bg-white rounded-2xl px-4 sm:px-6 py-6 sm:py-8 shadow-lg">
                 <h2 class="text-lg sm:text-xl font-bold text-gray-800 mb-4 sm:mb-6 text-center">Cara membuat</h2>
                 <div class="space-y-4">
-                    @foreach(explode('.', $recipe->instructions) as $index => $instruction)
-                        @if(trim($instruction))
-                            <div class="flex space-x-3 sm:space-x-4">
-                                <div class="flex-shrink-0">
-                                    <div class="w-7 h-7 sm:w-8 sm:h-8 bg-orange-500 text-white rounded-full flex items-center justify-center font-bold text-xs sm:text-sm">
-                                        {{ $index + 1 }}
-                                    </div>
+                    @if($recipe->instructions && count($recipe->instructions) > 0)
+                        @foreach($recipe->instructions as $index => $instruction)
+                            <div class="flex space-x-4">
+                                <div class="flex-shrink-0 w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center font-bold text-sm">
+                                    {{ $index + 1 }}
                                 </div>
-                                <p class="text-gray-700 leading-relaxed text-sm sm:text-base">{{ trim($instruction) }}.</p>
+                                <p class="text-gray-700 pt-1">{{ $instruction }}</p>
                             </div>
-                        @endif
-                    @endforeach
+                        @endforeach
+                    @else
+                        <p class="text-gray-500 text-center">Instruksi belum tersedia</p>
+                    @endif
                 </div>
             </div>
         </div>
@@ -80,12 +75,13 @@
                 <h2 class="text-lg sm:text-xl font-bold text-gray-800 mb-4 sm:mb-6 text-center">Video</h2>
                 @if($recipe->video_url)
                     @php
-                        $videoId = null;
-                        if (Str::contains($recipe->video_url, 'youtube.com/watch?v=')) {
-                            $videoId = Str::after($recipe->video_url, 'v=');
-                        } elseif (Str::contains($recipe->video_url, 'youtu.be/')) {
-                            $videoId = Str::after($recipe->video_url, 'youtu.be/');
-                        }
+    $videoId = null;
+    if (Str::contains($recipe->video_url, 'youtube.com/watch?v=')) {
+        $videoId = Str::after($recipe->video_url, 'v=');
+    } elseif (Str::contains($recipe->video_url, 'youtu.be/')) {
+        $videoId = Str::after($recipe->video_url, 'youtu.be/');
+    }
+
                     @endphp
 
                     @if($videoId)
@@ -116,7 +112,7 @@
         <div class="mx-4 sm:mx-6 mb-6">
             <div class="bg-[#9EBC8A] rounded-2xl px-4 sm:px-6 py-6 sm:py-8">
                 <h2 class="text-lg sm:text-xl font-bold text-gray-800 mb-4 sm:mb-6 text-center">
-                    <span class="block sm:inline">Ulasan ({{ $recipe->totalComments() }})</span>
+                    <span class="block sm:inline">Ulasan ({{ $comments->total() ?? $comments->count() }})</span>
                     @if($recipe->averageRating() > 0)
                         <span class="block sm:inline text-sm sm:text-base mt-1 sm:mt-0">
                             - Rating: {{ number_format($recipe->averageRating(), 1) }}/5 ⭐

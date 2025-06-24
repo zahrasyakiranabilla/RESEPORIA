@@ -18,11 +18,13 @@ class Recipe extends Model
         'cooking_time',
         'ingredients',
         'instructions',
-        'video_url'
+        'video_url',
+        'status',
     ];
 
     protected $casts = [
         'ingredients' => 'array',
+        'instructions' => 'array',
         'rating' => 'decimal:1'
     ];
 
@@ -40,6 +42,30 @@ class Recipe extends Model
     public function comments()
     {
         return $this->hasMany(Comment::class)->latest();
+    }
+
+    /**
+     * Get total comments count
+     */
+    public function totalComments()
+    {
+        return $this->comments()->count();
+    }
+
+    /**
+     * Get average rating - karena rating disimpan langsung di tabel recipes
+     */
+    public function averageRating()
+    {
+        return $this->rating ?? 0;
+    }
+
+    /**
+     * Alternatif: jika ingin menghitung dari comments yang memiliki rating
+     */
+    public function averageRatingFromComments()
+    {
+        return $this->comments()->whereNotNull('rating')->avg('rating') ?? 0;
     }
 
     /**
@@ -73,66 +99,5 @@ class Recipe extends Model
     public function isFavoritedBy($sessionId)
     {
         return $this->favorites()->where('session_id', $sessionId)->exists();
-    }
-
-    /**
-     * Menghitung rata-rata rating dari comments (sistem ulasan baru)
-     * Ini akan menggantikan rating yang ada di database
-     */
-    public function averageRating()
-    {
-        $average = $this->comments()->avg('rating');
-        return $average ? round($average, 1) : 0;
-    }
-
-    /**
-     * Total jumlah ulasan/comments
-     */
-    public function totalComments()
-    {
-        return $this->comments()->count();
-    }
-
-    /**
-     * Mendapatkan rating dalam format bintang
-     */
-    public function getRatingStarsAttribute()
-    {
-        $rating = $this->averageRating();
-        $stars = '';
-        
-        for ($i = 1; $i <= 5; $i++) {
-            if ($i <= $rating) {
-                $stars .= '⭐';
-            }
-        }
-        
-        return $stars;
-    }
-
-    /**
-     * Mendapatkan comments terbaru (5 terakhir)
-     */
-    public function recentComments($limit = 5)
-    {
-        return $this->comments()->limit($limit)->get();
-    }
-
-    /**
-     * Cek apakah resep memiliki ulasan
-     */
-    public function hasComments()
-    {
-        return $this->comments()->exists();
-    }
-
-    /**
-     * Update rating berdasarkan rata-rata comments
-     * Method ini bisa dipanggil setelah ada comment baru
-     */
-    public function updateAverageRating()
-    {
-        $this->rating = $this->averageRating();
-        $this->save();
     }
 }
