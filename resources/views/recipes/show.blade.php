@@ -73,38 +73,55 @@
         <div class="mx-4 sm:mx-6 mb-6">
             <div class="bg-white rounded-2xl px-4 sm:px-6 py-6 sm:py-8 shadow-lg">
                 <h2 class="text-lg sm:text-xl font-bold text-gray-800 mb-4 sm:mb-6 text-center">Video</h2>
-                @if($recipe->video_url)
-                    @php
-    $videoId = null;
-    if (Str::contains($recipe->video_url, 'youtube.com/watch?v=')) {
-        $videoId = Str::after($recipe->video_url, 'v=');
-    } elseif (Str::contains($recipe->video_url, 'youtu.be/')) {
-        $videoId = Str::after($recipe->video_url, 'youtu.be/');
-    }
+                
+                @auth
+                    <!-- User sudah login - bisa lihat video -->
+                    @if($recipe->video_url)
+                        @php
+                            $videoId = null;
+                            if (Str::contains($recipe->video_url, 'youtube.com/watch?v=')) {
+                                $videoId = Str::after($recipe->video_url, 'v=');
+                            } elseif (Str::contains($recipe->video_url, 'youtu.be/')) {
+                                $videoId = Str::after($recipe->video_url, 'youtu.be/');
+                            }
+                        @endphp
 
-                    @endphp
-
-                    @if($videoId)
-                        <div class="w-full h-48 sm:h-64 lg:h-80 bg-gray-100 rounded-xl overflow-hidden">
-                            <iframe src="https://www.youtube.com/embed/{{ $videoId }}" frameborder="0" allowfullscreen class="w-full h-full">
-                            </iframe>
-                        </div>
+                        @if($videoId)
+                            <div class="w-full h-48 sm:h-64 lg:h-80 bg-gray-100 rounded-xl overflow-hidden">
+                                <iframe src="https://www.youtube.com/embed/{{ $videoId }}" frameborder="0" allowfullscreen class="w-full h-full">
+                                </iframe>
+                            </div>
+                        @else
+                            <div class="w-full h-48 sm:h-64 lg:h-80 bg-gray-100 rounded-xl flex items-center justify-center">
+                                <div class="text-center text-gray-400">
+                                    <i class="fas fa-play-circle text-4xl sm:text-6xl mb-2 sm:mb-4"></i>
+                                    <p class="text-sm sm:text-lg">Format URL video tidak dikenali</p>
+                                </div>
+                            </div>
+                        @endif
                     @else
                         <div class="w-full h-48 sm:h-64 lg:h-80 bg-gray-100 rounded-xl flex items-center justify-center">
                             <div class="text-center text-gray-400">
                                 <i class="fas fa-play-circle text-4xl sm:text-6xl mb-2 sm:mb-4"></i>
-                                <p class="text-sm sm:text-lg">Format URL video tidak dikenali</p>
+                                <p class="text-sm sm:text-lg">Video belum tersedia</p>
                             </div>
                         </div>
                     @endif
                 @else
-                    <div class="w-full h-48 sm:h-64 lg:h-80 bg-gray-100 rounded-xl flex items-center justify-center">
-                        <div class="text-center text-gray-400">
-                            <i class="fas fa-play-circle text-4xl sm:text-6xl mb-2 sm:mb-4"></i>
-                            <p class="text-sm sm:text-lg">Video belum tersedia</p>
+                    <!-- Guest - tidak bisa lihat video -->
+                    <div class="w-full h-48 sm:h-64 lg:h-80 bg-gradient-to-br from-green-100 to-green-200 rounded-xl flex items-center justify-center">
+                        <div class="text-center p-6">
+                            <div class="bg-white rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center shadow-lg">
+                                <i class="fas fa-lock text-green-600 text-2xl"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-gray-800 mb-2">Video Eksklusif</h3>
+                            <p class="text-gray-600 text-sm mb-4">Login untuk menonton video tutorial memasak</p>
+                            <a href="{{ route('login') }}" class="bg-green-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-green-700 transition-colors inline-block">
+                                Login Sekarang
+                            </a>
                         </div>
                     </div>
-                @endif
+                @endauth
             </div>
         </div>
 
@@ -138,39 +155,51 @@
                     </div>
                 @endif
 
-                <!-- Comment Form -->
-                <div class="bg-white rounded-xl p-3 sm:p-4 mb-4">
-                    <form action="{{ route('comments.store', $recipe) }}" method="POST" class="space-y-4">
-                        @csrf
-                        <div>
-                            <label for="comment" class="block text-sm font-medium text-gray-700 mb-2">Tulis ulasan Anda:</label>
-                            <textarea
-                                id="comment"
-                                name="comment"
-                                rows="3"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none text-sm sm:text-base"
-                                placeholder="Bagikan pengalaman Anda tentang resep ini..."
-                                required>{{ old('comment') }}</textarea>
-                        </div>
-                        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-3 sm:space-y-0">
-                            <div class="flex items-center space-x-2">
-                                <label for="rating" class="text-sm font-medium text-gray-700">Rating:</label>
-                                <select id="rating" name="rating" class="border border-gray-300 rounded px-2 sm:px-3 py-1 text-xs sm:text-sm focus:ring-2 focus:ring-green-500">
-                                    <option value="5" {{ old('rating') == '5' ? 'selected' : '' }}>⭐⭐⭐⭐⭐</option>
-                                    <option value="4" {{ old('rating') == '4' ? 'selected' : '' }}>⭐⭐⭐⭐</option>
-                                    <option value="3" {{ old('rating') == '3' ? 'selected' : '' }}>⭐⭐⭐</option>
-                                    <option value="2" {{ old('rating') == '2' ? 'selected' : '' }}>⭐⭐</option>
-                                    <option value="1" {{ old('rating') == '1' ? 'selected' : '' }}>⭐</option>
-                                </select>
+                @auth
+                    <!-- Comment Form untuk User -->
+                    <div class="bg-white rounded-xl p-3 sm:p-4 mb-4">
+                        <form action="{{ route('comments.store', $recipe) }}" method="POST" class="space-y-4">
+                            @csrf
+                            <div>
+                                <label for="comment" class="block text-sm font-medium text-gray-700 mb-2">Tulis ulasan Anda:</label>
+                                <textarea
+                                    id="comment"
+                                    name="comment"
+                                    rows="3"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none text-sm sm:text-base"
+                                    placeholder="Bagikan pengalaman Anda tentang resep ini..."
+                                    required>{{ old('comment') }}</textarea>
                             </div>
-                            <button type="submit" class="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white px-4 sm:px-6 py-2 rounded-lg font-medium transition-colors text-sm sm:text-base">
-                                Kirim Ulasan
-                            </button>
-                        </div>
-                    </form>
-                </div>
+                            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-3 sm:space-y-0">
+                                <div class="flex items-center space-x-2">
+                                    <label for="rating" class="text-sm font-medium text-gray-700">Rating:</label>
+                                    <select id="rating" name="rating" class="border border-gray-300 rounded px-2 sm:px-3 py-1 text-xs sm:text-sm focus:ring-2 focus:ring-green-500">
+                                        <option value="5" {{ old('rating') == '5' ? 'selected' : '' }}>⭐⭐⭐⭐⭐</option>
+                                        <option value="4" {{ old('rating') == '4' ? 'selected' : '' }}>⭐⭐⭐⭐</option>
+                                        <option value="3" {{ old('rating') == '3' ? 'selected' : '' }}>⭐⭐⭐</option>
+                                        <option value="2" {{ old('rating') == '2' ? 'selected' : '' }}>⭐⭐</option>
+                                        <option value="1" {{ old('rating') == '1' ? 'selected' : '' }}>⭐</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white px-4 sm:px-6 py-2 rounded-lg font-medium transition-colors text-sm sm:text-base">
+                                    Kirim Ulasan
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                @else
+                    <!-- Guest Comment Prompt -->
+                    <div class="bg-white rounded-xl p-4 sm:p-6 text-center mb-4">
+                        <i class="fas fa-comments text-gray-400 text-3xl sm:text-4xl mb-3"></i>
+                        <h3 class="text-lg font-bold text-gray-800 mb-2">Ingin Memberikan Ulasan?</h3>
+                        <p class="text-gray-600 mb-4">Login untuk berbagi pengalaman tentang resep ini</p>
+                        <a href="{{ route('login') }}" class="bg-green-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-green-700 transition-colors">
+                            Login Sekarang
+                        </a>
+                    </div>
+                @endauth
 
-                <!-- Existing Comments -->
+                <!-- Existing Comments tetap sama... -->
                 <div class="space-y-3">
                     @forelse($comments as $comment)
                         <div class="bg-white rounded-xl p-3 sm:p-4">
@@ -212,9 +241,17 @@
 
         <!-- Floating Save Button -->
         <div class="fixed bottom-4 sm:bottom-6 right-4 sm:right-6 z-40">
-            <button onclick="toggleFavorite({{ $recipe->id }})" class="w-12 h-12 sm:w-16 sm:h-16 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center {{ $isFavorited ? 'bg-yellow-500 hover:bg-yellow-600' : 'bg-blue-500 hover:bg-blue-600' }}">
-                <i class="fas fa-bookmark text-lg sm:text-xl"></i>
-            </button>
+            @auth
+                <!-- User sudah login - bisa save -->
+                <button onclick="toggleFavorite({{ $recipe->id }})" class="w-12 h-12 sm:w-16 sm:h-16 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center {{ $isFavorited ? 'bg-yellow-500 hover:bg-yellow-600' : 'bg-blue-500 hover:bg-blue-600' }}">
+                    <i class="fas fa-bookmark text-lg sm:text-xl"></i>
+                </button>
+            @else
+                <!-- Guest - diminta login -->
+                <a href="{{ route('login') }}" class="w-12 h-12 sm:w-16 sm:h-16 bg-gray-400 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center">
+                    <i class="fas fa-lock text-lg sm:text-xl"></i>
+                </a>
+            @endauth
         </div>
     </div>
 
