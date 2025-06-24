@@ -45,6 +45,30 @@ class Recipe extends Model
     }
 
     /**
+     * Get total comments count
+     */
+    public function totalComments()
+    {
+        return $this->comments()->count();
+    }
+
+    /**
+     * Get average rating - karena rating disimpan langsung di tabel recipes
+     */
+    public function averageRating()
+    {
+        return $this->rating ?? 0;
+    }
+
+    /**
+     * Alternatif: jika ingin menghitung dari comments yang memiliki rating
+     */
+    public function averageRatingFromComments()
+    {
+        return $this->comments()->whereNotNull('rating')->avg('rating') ?? 0;
+    }
+
+    /**
      * Format cooking time dengan 'm'
      */
     public function getCookingTimeFormatAttribute()
