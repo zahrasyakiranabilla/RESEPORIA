@@ -113,9 +113,18 @@
                     <a href="{{ route('recipes.favorites') }}" class="text-white hover:text-green-200 transition-colors p-2">
                         <i class="fas fa-heart text-xl"></i>
                     </a>
-                    <a href="{{ route('login') }}" data-turbo="false" class="bg-white text-green-700 px-6 py-2 rounded-full font-semibold hover:bg-green-50 transition-colors whitespace-nowrap">
-                        Login/Register
-                    </a>
+                    
+                    @auth
+                        <!-- Profile Icon untuk user yang sudah login -->
+                        <a href="{{ route('profile.show') }}" class="text-white hover:text-green-200 transition-colors p-2">
+                            <i class="fas fa-user text-xl"></i>
+                        </a>
+                    @else
+                        <!-- Login/Register untuk guest -->
+                        <a href="{{ route('login') }}" data-turbo="false" class="bg-white text-green-700 px-6 py-2 rounded-full font-semibold hover:bg-green-50 transition-colors whitespace-nowrap">
+                            Login/Register
+                        </a>
+                    @endauth
                 </div>
 
                 <!-- Mobile Right Icons -->
