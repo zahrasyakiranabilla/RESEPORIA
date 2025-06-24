@@ -40,8 +40,8 @@ class RecipeController extends Controller
         // Get sort parameter
         $sort = request('sort', 'newest');
 
-        $query = Recipe::where('category', $categoryName);
-
+         $query = Recipe::where('category', $categoryName);
+         
         // Apply sorting
         switch ($sort) {
             case 'rating':
@@ -64,10 +64,13 @@ class RecipeController extends Controller
 
     public function show(Recipe $recipe)
     {
-        $sessionId = session()->getId();
-        $isFavorited = $recipe->isFavoritedBy($sessionId);
+    $sessionId = session()->getId();
+    $isFavorited = $recipe->isFavoritedBy($sessionId);
+    
+    // Ambil comments dengan pagination
+    $comments = $recipe->comments()->paginate(10);
 
-        return view('recipes.show', compact('recipe', 'isFavorited'));
+    return view('recipes.show', compact('recipe', 'isFavorited', 'comments'));
     }
 
     public function like(Recipe $recipe)
