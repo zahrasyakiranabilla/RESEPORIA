@@ -443,7 +443,7 @@
                         <div class="flex items-center space-x-3">
                             <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0">
                                 ${recipe.image
-                                    ? `<img src="/images/recipes/${recipe.image}" alt="${recipe.title}" class="w-full h-full object-cover">`
+                                    ? `<img src="/${recipe.image}" alt="${recipe.title}" class="w-full h-full object-cover">`
                                     : '<i class="fas fa-utensils text-gray-400 w-full h-full flex items-center justify-center text-xs"></i>'
                                 }
                             </div>
