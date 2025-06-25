@@ -33,36 +33,41 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    
+
     // Recipe interactions (like, favorite, comment)
     Route::post('/recipe/{recipe}/like', [RecipeController::class, 'like'])->name('recipes.like');
     Route::post('/recipe/{recipe}/favorite', [RecipeController::class, 'toggleFavorite'])->name('recipes.favorite');
     Route::post('/recipe/{recipe}/comment', [CommentController::class, 'store'])->name('comments.store');
-    
+
     // Favorites page
     Route::get('/favorites', [RecipeController::class, 'favorites'])->name('recipes.favorites');
-    
+
     // Upload Recipe
     Route::get('/recipes/create', [RecipeController::class, 'create'])->name('recipes.create');
     Route::post('/recipes', [RecipeController::class, 'store'])->name('recipes.store');
-    
+
     // Welcoming page
     Route::get('/welcoming', [WelcomingController::class, 'index'])->name('welcoming');
-    
+
     // Logout
-    Route::get('/keluar', function () { 
-        Auth::logout(); 
+    Route::get('/keluar', function () {
+        Auth::logout();
         return redirect('/')->with('success', 'Berhasil logout!');
     })->name('logout');
-    
+
     // Settings
     Route::get('/settings/password', function () {
         return response('Password Settings Page', 200);
     })->name('settings.password');
-    
+
     Route::get('/settings/appearance', function () {
         return response('Appearance Settings Page', 200);
     })->name('settings.appearance');
+    
+    Route::middleware(['auth'])->group(function () {
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+});
+
 });
 
 // Memuat rute-rute bawaan Laravel Breeze
