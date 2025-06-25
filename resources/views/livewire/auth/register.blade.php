@@ -11,7 +11,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
         </svg>
     </a>
-    <div class="min-h-screen flex items-center justify-center bg-[#e6e2c7] px-4 py-12">
+    <div class="min-h-screen flex items-center justify-center px-4 py-12">
         <div class="bg-[#73946B] rounded-3xl shadow-xl w-full max-w-md px-10 py-12 relative">
             <div class="text-center mb-10">
                 <img src="{{ asset('images/logoreseporia.png') }}" class="mx-auto h-16 w-16 rounded-full" alt="Logo">

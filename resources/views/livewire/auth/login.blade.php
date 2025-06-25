@@ -1,4 +1,4 @@
-<div class="min-h-screen flex items-center justify-center bg-[#e6e2c7] px-4 py-12 relative">
+<div class="min-h-screen flex items-center justify-center px-4 py-12 relative">
     <a href="{{ route('home') }}"
        class="absolute top-8 left-8 text-white bg-black/20 rounded-full p-3 hover:bg-black/40 transition-colors duration-300"
        aria-label="Kembali ke halaman utama">
@@ -60,11 +60,6 @@
                     <input type="checkbox" name="remember" class="accent-white">
                     Remember Me
                 </label>
-                @if (Route::has('password.request'))
-                    <a class="hover:underline text-yellow-200 font-medium" href="{{ route('password.request') }}">
-                        Forgot Password?
-                    </a>
-                @endif
             </div>
 
             {{-- Tombol --}}
