@@ -54,11 +54,28 @@
                 margin-top: 0.25rem;
             }
         }
+
+        /* Mobile icon spacing fix */
+        @media (max-width: 768px) {
+            .mobile-icons {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            
+            .mobile-icons .icon-btn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 40px;
+                height: 40px;
+                border-radius: 0.375rem;
+            }
+        }
     </style>
 </head>
 @if (!request()->is('login') && !request()->is('register') && !request()->is('reset-password'))
 <body class="min-h-screen">
-    <!-- Navbar -->
     <!-- Navbar -->
     <header class="text-white relative z-50" style="background-color: #73946B;">
         <div class="max-w-7xl mx-auto px-4 py-3">
@@ -108,22 +125,19 @@
                     </div>
                 </div>
 
-
-
                 <!-- Desktop Navigation Icons -->
                 <div class="hidden md:flex items-center space-x-4">
-                    <a href="{{ route('recipes.create') }}" class=" text-white hover:text-green-200 p-2 hover:bg-opacity-30 transition-all duration-200 hover:scale-110">
-                        <i class="fas fa-plus text-sm sm:text-lg"></i>
+                    <a href="{{ route('recipes.create') }}" class="text-white hover:text-green-200 p-2 hover:bg-white hover:bg-opacity-30 transition-all duration-200 hover:scale-110">
+                        <i class="fas fa-plus text-lg"></i>
                     </a>
-                </div>
-                    <a href="{{ route('recipes.favorites') }}" class="text-white hover:text-green-200 transition-colors p-2 hover:bg-opacity-30 transition-all duration-200 hover:scale-110">
-                        <i class="fas fa-heart text-xl"></i>
+                    <a href="{{ route('recipes.favorites') }}" class="text-white hover:text-green-200 transition-colors p-2 hover:bg-white hover:bg-opacity-30 transition-all duration-200 hover:scale-110">
+                        <i class="fas fa-heart text-lg"></i>
                     </a>
 
                     @auth
                         <!-- Profile Icon untuk user yang sudah login -->
-                        <a href="{{ route('profile.show') }}" class="text-white hover:text-green-200 transition-colors p-2 hover:bg-opacity-30 transition-all duration-200 hover:scale-110">
-                            <i class="fas fa-user text-xl"></i>
+                        <a href="{{ route('profile.show') }}" class="text-white hover:text-green-200 transition-colors p-2 hover:bg-white hover:bg-opacity-30 transition-all duration-200 hover:scale-110">
+                            <i class="fas fa-user text-lg"></i>
                         </a>
                     @else
                         <!-- Login/Register untuk guest -->
@@ -133,14 +147,26 @@
                     @endauth
                 </div>
 
-                <!-- Mobile Right Icons -->
-                <div class="flex md:hidden items-center space-x-2">
-                    <button id="mobileSearchBtn" class="text-white p-2 rounded-md hover:bg-white hover:bg-opacity-20 transition-colors">
+                <!-- Mobile Right Icons - FIXED STRUCTURE -->
+                <div class="flex md:hidden items-center mobile-icons">
+                    <button id="mobileSearchBtn" class="text-white icon-btn hover:bg-white hover:bg-opacity-20 transition-colors">
                         <i class="fas fa-search text-lg"></i>
                     </button>
-                    <a href="{{ route('recipes.favorites') }}" class="text-white p-2 rounded-md hover:bg-white hover:bg-opacity-20 transition-colors">
+                    <a href="{{ route('recipes.create') }}" class="text-white icon-btn hover:bg-white hover:bg-opacity-20 transition-colors">
+                        <i class="fas fa-plus text-lg"></i>
+                    </a>
+                    <a href="{{ route('recipes.favorites') }}" class="text-white icon-btn hover:bg-white hover:bg-opacity-20 transition-colors">
                         <i class="fas fa-heart text-lg"></i>
                     </a>
+                    @auth
+                        <a href="{{ route('profile.show') }}" class="text-white icon-btn hover:bg-white hover:bg-opacity-20 transition-colors">
+                            <i class="fas fa-user text-lg"></i>
+                        </a>
+                    @else
+                        <a href="{{ route('login') }}" data-turbo="false" class="bg-white text-green-700 px-3 py-2 rounded-full font-semibold hover:bg-green-50 transition-colors text-sm">
+                            Login
+                        </a>
+                    @endauth
                 </div>
             </div>
 
@@ -229,11 +255,13 @@
                 </nav>
 
                 <!-- Mobile Login Button -->
+                @guest
                 <div class="mt-8 pt-6 border-t border-white border-opacity-30">
                     <a href="{{ route('login') }}" class="block w-full bg-white text-[#73946B] text-center py-3 px-4 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
                         Login / Register
                     </a>
                 </div>
+                @endguest
             </div>
         </div>
     </header>
