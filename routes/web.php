@@ -63,9 +63,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/settings/appearance', function () {
         return response('Appearance Settings Page', 200);
     })->name('settings.appearance');
-    
-    Route::middleware(['auth'])->group(function () {
-    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+
+    Route::middleware(['web', 'auth'])->group(function () {
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 });
 
 });

@@ -1,4 +1,4 @@
-<?php
+{{-- <?php
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -75,4 +75,4 @@ new class extends Component {
             </div>
         </form>
     </x-settings.layout>
-</section>
+</section> --}}

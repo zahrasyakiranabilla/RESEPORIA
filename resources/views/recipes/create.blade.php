@@ -265,10 +265,6 @@
 
                 {{-- Tombol Aksi (Simpan ke Draft dan Upload Resep) --}}
                 <div class="flex justify-center space-x-4 mt-8">
-                    <button type="submit" name="action" value="draft"
-                        class="bg-gray-400 text-white font-bold py-3 px-6 rounded-full hover:bg-gray-500 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-300">
-                        Simpan ke Draft
-                    </button>
                     <button type="submit" name="action" value="publish"
                         class="bg-[#73946B] text-white font-bold py-3 px-6 rounded-full hover:bg-[#5f7e59] transition-colors focus:outline-none focus:ring-2 focus:ring-[#9bbd84]">
                         Upload Resep

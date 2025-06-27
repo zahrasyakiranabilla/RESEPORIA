@@ -41,7 +41,7 @@
             transition: all 0.3s ease-in-out;
             transform: translateX(-100%);
         }
-        
+
         .mobile-menu.active {
             transform: translateX(0);
         }
@@ -69,7 +69,7 @@
                     <button id="mobileMenuBtn" class="md:hidden text-white p-2 rounded-md hover:bg-white hover:bg-opacity-20 transition-colors">
                         <i class="fas fa-bars text-lg sm:text-xl"></i>
                     </button>
-                    
+
                     <!-- Logo -->
                     <a href="{{ route('home') }}" class="flex items-center space-x-2 sm:space-x-3 hover:opacity-80 transition-opacity">
                         <img src="{{ asset('images/logoreseporia.png') }}" alt="Logo" class="w-8 h-8 sm:w-12 sm:h-12 rounded-full">
@@ -108,15 +108,21 @@
                     </div>
                 </div>
 
+
+
                 <!-- Desktop Navigation Icons -->
                 <div class="hidden md:flex items-center space-x-4">
-                    <a href="{{ route('recipes.favorites') }}" class="text-white hover:text-green-200 transition-colors p-2">
+                    <a href="{{ route('recipes.create') }}" class=" text-white hover:text-green-200 p-2 hover:bg-opacity-30 transition-all duration-200 hover:scale-110">
+                        <i class="fas fa-plus text-sm sm:text-lg"></i>
+                    </a>
+                </div>
+                    <a href="{{ route('recipes.favorites') }}" class="text-white hover:text-green-200 transition-colors p-2 hover:bg-opacity-30 transition-all duration-200 hover:scale-110">
                         <i class="fas fa-heart text-xl"></i>
                     </a>
-                    
+
                     @auth
                         <!-- Profile Icon untuk user yang sudah login -->
-                        <a href="{{ route('profile.show') }}" class="text-white hover:text-green-200 transition-colors p-2">
+                        <a href="{{ route('profile.show') }}" class="text-white hover:text-green-200 transition-colors p-2 hover:bg-opacity-30 transition-all duration-200 hover:scale-110">
                             <i class="fas fa-user text-xl"></i>
                         </a>
                     @else
@@ -188,34 +194,34 @@
                         <i class="fas fa-home text-lg"></i>
                         <span class="font-medium">Beranda</span>
                     </a>
-                    
+
                     <a href="{{ route('recipes.category', 'appetizer') }}" class="flex items-center space-x-3 text-white hover:bg-white hover:bg-opacity-20 p-3 rounded-lg transition-colors">
                         <i class="fas fa-cookie-bite text-lg"></i>
                         <span class="font-medium">Appetizer</span>
                     </a>
-                    
+
                     <a href="{{ route('recipes.category', 'main-course') }}" class="flex items-center space-x-3 text-white hover:bg-white hover:bg-opacity-20 p-3 rounded-lg transition-colors">
                         <i class="fas fa-drumstick-bite text-lg"></i>
                         <span class="font-medium">Main Course</span>
                     </a>
-                    
+
                     <a href="{{ route('recipes.category', 'dessert') }}" class="flex items-center space-x-3 text-white hover:bg-white hover:bg-opacity-20 p-3 rounded-lg transition-colors">
                         <i class="fas fa-ice-cream text-lg"></i>
                         <span class="font-medium">Dessert</span>
                     </a>
-                    
+
                     <a href="{{ route('recipes.category', 'drinks') }}" class="flex items-center space-x-3 text-white hover:bg-white hover:bg-opacity-20 p-3 rounded-lg transition-colors">
                         <i class="fas fa-coffee text-lg"></i>
                         <span class="font-medium">Drinks</span>
                     </a>
 
                     <hr class="border-white border-opacity-30 my-4">
-                    
+
                     <a href="{{ route('recipes.favorites') }}" class="flex items-center space-x-3 text-white hover:bg-white hover:bg-opacity-20 p-3 rounded-lg transition-colors">
                         <i class="fas fa-heart text-lg"></i>
                         <span class="font-medium">Favorit Saya</span>
                     </a>
-                    
+
                     <a href="{{ route('saran.create') }}" class="flex items-center space-x-3 text-white hover:bg-white hover:bg-opacity-20 p-3 rounded-lg transition-colors">
                         <i class="fas fa-flag text-lg"></i>
                         <span class="font-medium">Saran & Masukan</span>
@@ -237,7 +243,7 @@
     <main class="min-h-screen">
         {{ $slot }}
     </main>
-        
+
     <!-- Footer -->
     @if (!request()->is('login') && !request()->is('register'))
     <footer class="bg-[#73946B] text-white py-8 sm:py-12 mt-20">

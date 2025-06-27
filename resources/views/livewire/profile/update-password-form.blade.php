@@ -1,4 +1,4 @@
-<?php
+{{-- <?php
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -76,4 +76,4 @@ new class extends Component
             </x-action-message>
         </div>
     </form>
-</section>
+</section> --}}
