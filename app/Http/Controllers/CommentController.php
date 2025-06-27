@@ -17,12 +17,13 @@ class CommentController extends Controller
         ]);
 
         Comment::create([
-            'recipe_id' => $recipe->id,
-            'user_name' => 'Anonim',
-            'comment' => $request->comment,
-            'rating' => $request->rating,
-            'ip_address' => $request->ip()
-        ]);
+        'recipe_id' => $recipe->id,
+        'user_name' => auth()->check() ? auth()->user()->name : 'Anonim',
+        //'user_id' => auth()->id(), // Simpan juga user_id kalau ada kolom ini
+        'comment' => $request->comment,
+        'rating' => $request->rating,
+        'ip_address' => $request->ip()
+]);
 
         return redirect()->back()->with('success', 'Ulasan berhasil ditambahkan!');
     }

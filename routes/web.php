@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Auth;
 
+
 // Routes untuk GUEST (tanpa login)
 Route::get('/', [RecipeController::class, 'index'])->name('home');
 Route::get('/category/{category}', [RecipeController::class, 'category'])->name('recipes.category');
@@ -68,6 +69,30 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
 });
 
+});
+
+
+
+
+
+// TAMBAH INI - Admin Controllers (di root namespace)
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\AdminRecipeController;
+use App\Http\Controllers\AdminUserController;
+use App\Http\Controllers\AdminSaranController;
+use App\Http\Controllers\Admin\AdminCommentController; // Hanya ini yang di namespace Admin
+
+// Route admin tanpa authentication
+Route::group(['prefix' => 'admin'], function () {
+    Route::get('/', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('admin.dashboard');
+    Route::resource('recipes', \App\Http\Controllers\Admin\RecipeController::class, ['names' => 'admin.recipes']);
+    Route::resource('users', \App\Http\Controllers\Admin\UserController::class, ['names' => 'admin.users'])->only(['index', 'show']);
+    Route::get('/saran', [\App\Http\Controllers\Admin\SaranController::class, 'index'])->name('admin.saran.index');
+    Route::get('/saran/{saran}', [\App\Http\Controllers\Admin\SaranController::class, 'show'])->name('admin.saran.show');
+    Route::delete('/saran/{saran}', [\App\Http\Controllers\Admin\SaranController::class, 'destroy'])->name('admin.saran.destroy');
+    Route::post('/saran/{saran}/mark-read', [\App\Http\Controllers\Admin\SaranController::class, 'markAsRead'])->name('admin.saran.mark-read');
+    Route::get('/comments', [\App\Http\Controllers\Admin\AdminCommentController::class, 'index'])->name('admin.comments.index');
+    Route::delete('/comments/{comment}', [\App\Http\Controllers\Admin\AdminCommentController::class, 'destroy'])->name('admin.comments.destroy');
 });
 
 // Memuat rute-rute bawaan Laravel Breeze

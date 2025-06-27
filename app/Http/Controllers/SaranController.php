@@ -14,12 +14,17 @@ class SaranController extends Controller
 
     public function store(Request $request)
     {
+        // Validasi message wajib
         $request->validate([
             'message' => 'required|min:5'
         ]);
 
+        // Ambil data dari user yang login
         Saran::create([
-            'message' => $request->message
+            'name' => auth()->user()->name,
+            'email' => auth()->user()->email,
+            'message' => $request->message,
+            'is_read' => false
         ]);
 
         return redirect()->back()->with('success', 'Terima kasih atas masukan dan saran Anda!');

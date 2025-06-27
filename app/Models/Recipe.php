@@ -20,6 +20,7 @@ class Recipe extends Model
         'instructions',
         'video_url',
         'status',
+        'user_id', // Tambah ini jika ada kolom user_id
     ];
 
     protected $casts = [
@@ -27,6 +28,14 @@ class Recipe extends Model
         'instructions' => 'array',
         'rating' => 'decimal:1'
     ];
+
+    /**
+     * Relationship dengan User (jika ada kolom user_id)
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     /**
      * Relationship dengan favorites
@@ -43,6 +52,7 @@ class Recipe extends Model
     {
         return $this->hasMany(Comment::class)->latest();
     }
+
 
     /**
      * Get total comments count
@@ -99,5 +109,13 @@ class Recipe extends Model
     public function isFavoritedBy($sessionId)
     {
         return $this->favorites()->where('session_id', $sessionId)->exists();
+    }
+
+    /**
+     * Get user name (dengan fallback jika tidak ada user)
+     */
+    public function getUserNameAttribute()
+    {
+        return $this->user ? $this->user->name : 'Anonymous';
     }
 }
