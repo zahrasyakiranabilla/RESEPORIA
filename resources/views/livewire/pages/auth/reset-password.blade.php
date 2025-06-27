@@ -1,4 +1,4 @@
-<?php
+{{-- <?php
 
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\Hash;
@@ -102,4 +102,4 @@ new #[Layout('layouts.guest')] class extends Component
             </x-primary-button>
         </div>
     </form>
-</div>
+</div> --}}

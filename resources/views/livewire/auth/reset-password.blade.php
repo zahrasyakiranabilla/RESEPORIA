@@ -1,4 +1,4 @@
-<?php
+{{-- <?php
 
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\Hash;
@@ -112,4 +112,4 @@ new #[Layout('components.layouts.auth')] class extends Component {
             </flux:button>
         </div>
     </form>
-</div>
+</div> --}}

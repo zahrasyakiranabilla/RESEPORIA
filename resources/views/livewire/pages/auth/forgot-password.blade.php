@@ -1,4 +1,4 @@
-<?php
+{{-- <?php
 
 use Illuminate\Support\Facades\Password;
 use Livewire\Attributes\Layout;
@@ -58,4 +58,4 @@ new #[Layout('layouts.guest')] class extends Component
             </x-primary-button>
         </div>
     </form>
-</div>
+</div> --}}

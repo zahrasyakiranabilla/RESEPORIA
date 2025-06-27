@@ -38,11 +38,15 @@
             </div>
 
             <!-- Navigasi -->
+            <!-- Navigasi -->
             <div class="border-t border-white/30 pt-8 grid grid-cols-1 md:grid-cols-2 gap-6 text-white/90 text-lg mb-14">
-                <a href="{{ route('recipes.favorites') }}" class="hover:underline flex justify-center items-center gap-2">
-                    <i class="fas fa-heart text-xl"></i> Resep Favorit
+                <a href="{{ route('recipes.favorites') }}" class="hover:underline flex flex-col items-center gap-2 p-4 rounded-lg hover:bg-white/10 transition-all">
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-heart text-xl"></i>
+                        <span>Resep Favorit</span>
+                    </div>
                 </a>
-                <a href="{{ route('saran.create') }}" class="hover:underline flex justify-center items-center gap-2">
+                <a href="{{ route('saran.create') }}" class="hover:underline flex justify-center items-center gap-2 p-4 rounded-lg hover:bg-white/10 transition-all">
                     <i class="fas fa-comment-dots text-xl"></i> Saran & Pengaduan
                 </a>
             </div>

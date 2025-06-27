@@ -1,4 +1,4 @@
-<?php
+{{-- <?php
 
 use App\Livewire\Actions\Logout;
 use Illuminate\Support\Facades\Auth;
@@ -76,4 +76,4 @@ new class extends Component
             </div>
         </form>
     </x-modal>
-</section>
+</section> --}}
